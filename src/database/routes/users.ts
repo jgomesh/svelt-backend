@@ -7,6 +7,7 @@ import authMiddleware from '../middlewares/authMiddleware';
 
 const router = Router();
 
+router.get('/', () => ({ message: "Hello"}))
 router.delete('/user/:id', authAdmin, UserController.delete);
 router.get('/users', authAdmin, UserController.getAll);
 router.get('/seller_name/:id', authMiddleware, UserController.getSellerName)
