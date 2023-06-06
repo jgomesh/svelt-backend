@@ -16,7 +16,6 @@ function authMiddleware(req, res, next) {
     if (!id || id === 'undefined' || !role || role === 'undefined') {
       return res.sendStatus(401);
     }
-
     req.userId = id;
     req.role = role;
 

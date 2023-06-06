@@ -1,11 +1,11 @@
-const express = require('express');
+const { Router } = require('express');
 const UserController = require('../controllers/UserController');
 const AuthController = require('../controllers/AuthController');
 const validateUser = require('../validations/userValidation');
 const authAdmin = require('../middlewares/authAdmin');
 const authMiddleware = require('../middlewares/authMiddleware');
 
-const router = express.Router();
+const router = Router();
 
 router.delete('/user/:id', authAdmin, UserController.delete);
 router.get('/users', authAdmin, UserController.getAll);

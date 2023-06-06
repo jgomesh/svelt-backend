@@ -3,7 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const products = require('./database/routes/products');
 const status = require('./database/routes/status');
-const sales = require('./database/routes/sells');
+const sells = require('./database/routes/sells');
 const users = require('./database/routes/users');
 const sequelize = require('./database/instances/sequelize');
 const multer = require('./database/routes/multer');
@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use(products);
-app.use(sales);
+app.use(sells);
 app.use(users);
 app.use(status);
 app.use(multer);

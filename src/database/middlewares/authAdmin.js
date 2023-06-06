@@ -16,7 +16,7 @@ function authAdmin(req, res, next) {
     if (!id || !role || role !== 'admin') {
       return res.sendStatus(401);
     }
-
+    console.log(id)
     req.userId = id;
     next();
   } catch {

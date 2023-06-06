@@ -2,13 +2,7 @@ const { Model, INTEGER, STRING, DECIMAL, DATE, NOW } = require('sequelize');
 const User = require('./user');
 const sequelize = require('../instances/sequelize');
 
-class Sales extends Model {
-  constructor(values, options) {
-    super(values, options);
-    this.user_id = 0;
-    this.seller_id = 0;
-  }
-}
+class Sales extends Model {}
 
 Sales.init(
   {

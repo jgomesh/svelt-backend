@@ -59,19 +59,19 @@ class SalesController {
   async create(req, res) {
     const sale = req.body;
     const { sales_products } = sale;
-
     const userExists = await User.findOne({
       where: { id: req.userId }
     })
-
     if (!userExists) {
       return res.sendStatus(404);
     }
-
+    
     const newSale = await Sales.create({ ...sale, sale_date: new Date().toLocaleDateString(), user_id: req.userId, status: "em espera" });
-
+    console.log("OIIIIIIIIIIIII")
+    console.log("HERE?", newSale.id)
     const newSalesProducts = await Promise.all(sales_products.map(async (saleProduct) => {
       await SalesProducts.create({ sale_id: newSale.id, ...saleProduct });
+      console.log("OU AQUI", saleProduct.id)
       const product = await Products.findByPk(saleProduct.id);
 
       return {

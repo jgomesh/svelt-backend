@@ -1,5 +1,5 @@
-const addAllPrices = ("./addAllPrices");
-const Products = ("../models/products");
+const addAllPrices = require("./addAllPrices");
+const Products = require("../models/products");
 
 const priceValidation = async (req, res, next) => {
   const sale = req.body;

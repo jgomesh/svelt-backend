@@ -1,11 +1,11 @@
-const express = require('express');
+const { Router } = require('express');
 const authAdmin = require('../middlewares/authAdmin');
 const validateSale = require('../validations/saleValidation');
 const priceValidation = require('../validations/priceValidation');
 const authMiddleware = require('../middlewares/authMiddleware');
 const SaleController = require('../controllers/SaleController');
 
-const router = express.Router();
+const router = Router();
 
 router.post('/sell', authMiddleware, validateSale, priceValidation, SaleController.create);
 router.get('/sells', authAdmin, SaleController.getAll);
