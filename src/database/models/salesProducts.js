@@ -3,11 +3,7 @@ const Sale = require('./sales');
 const Product = require('./products');
 const sequelize = require('../instances/sequelize');
 
-class SaleProduct extends Model {
-  sale_id;
-  product_id;
-  quantity;
-}
+class SaleProduct extends Model {}
 
 SaleProduct.init(
   {
