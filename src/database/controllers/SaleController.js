@@ -148,7 +148,7 @@ class SalesController {
         [Sequelize.fn('SUM', Sequelize.col('quantity')), 'total_sales'],
         'product_id',
       ],
-      group: ['product.id', 'product.name'],
+      group: ['product.id', 'product.name', 'SaleProduct.product_id'],
       order: [[Sequelize.literal('total_sales'), 'DESC']],
       limit: 5,
       include: [
@@ -159,15 +159,16 @@ class SalesController {
         },
       ],
     });
-
+  
     const result = topProducts.map((product) => ({
       id: product.product.id,
       name: product.product.name,
       total_sales: product.get('total_sales'),
     }));
-
+  
     res.json(result);
   }
+  
 
   async getTopSellersWithSales(_req, res) {
     const sellers = await Sales.findAll({
