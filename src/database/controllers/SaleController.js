@@ -1,4 +1,3 @@
-const { Request, Response } = require("express");
 const Products = require("../models/products");
 const Sales = require("../models/sales");
 const User = require("../models/user");
@@ -7,53 +6,56 @@ const { Sequelize } = require("sequelize");
 
 class SalesController {
   async getAll(_req, res) {
-    const SalesExists = await Sales.findAll();
+    const sales = await Sales.findAll();
 
-    if (!SalesExists) {
+    if (!sales.length) {
       return res.sendStatus(409);
     }
-    return res.status(201).json({ sales: SalesExists });
+
+    return res.status(201).json({ sales });
   }
 
   async getSellerSales(req, res) {
-    const SalesExists = await Sales.findAll({ where: { seller_id: req.userId } });
+    const sales = await Sales.findAll({ where: { seller_id: req.userId } });
 
-    if (!SalesExists) {
+    if (!sales.length) {
       return res.sendStatus(409);
     }
-    return res.status(201).json({ sales: SalesExists });
+
+    return res.status(201).json({ sales });
   }
 
   async getById(req, res) {
-    const SaleExist = await Sales.findAll({ where: { user_id: req.userId } });
+    const sales = await Sales.findAll({ where: { user_id: req.userId } });
 
-    if (!SaleExist) {
+    if (!sales.length) {
       return res.sendStatus(404);
     }
 
-    return res.status(201).json({ sale: SaleExist });
+    return res.status(201).json({ sales });
   }
 
   async getSalesProducts(_req, res) {
-    const SalesExists = await SalesProducts.findAll();
+    const salesProducts = await SalesProducts.findAll();
 
-    if (!SalesExists) {
+    if (!salesProducts.length) {
       return res.sendStatus(409);
     }
-    return res.status(201).json({ salesProducts: SalesExists });
+
+    return res.status(201).json({ salesProducts });
   }
 
   async getSalesProductsId(req, res) {
     const { id } = req.params;
-    const SalesExist = await Sales.findByPk(id);
+    const sale = await Sales.findByPk(id);
 
-    if (!SalesExist && (id !== req.userId)) {
+    if (!sale && id !== req.userId) {
       return res.sendStatus(409);
     }
 
-    const dataSalesProducts = await SalesProducts.findAll({ where: { sale_id: id } });
+    const salesProducts = await SalesProducts.findAll({ where: { sale_id: id } });
 
-    return res.status(201).json({ salesProducts: dataSalesProducts, sale: SalesExist });
+    return res.status(201).json({ salesProducts, sale });
   }
 
   async create(req, res) {
@@ -89,26 +91,26 @@ class SalesController {
 
   async updateStatus(req, res) {
     const { id } = req.params;
-    const SaleExist = await Sales.findByPk(id);
+    const sale = await Sales.findByPk(id);
     const options = ['em espera', 'em preparo', 'a caminho', 'entregue'];
 
-    if (!SaleExist) {
-      res.status(409).json({ message: "Sale not found!!" });
+    if (!sale) {
+      return res.status(409).json({ message: "Sale not found!!" });
     }
-    const nextStatus = Number(options.indexOf(SaleExist?.dataValues.status)) + 1;
+    const nextStatus = Number(options.indexOf(sale?.dataValues.status)) + 1;
     const saleUpdated = await Sales.update({ status: options[nextStatus] }, { where: { id } });
-    res.status(200).json({ saleUpdated, status: options[nextStatus] });
+    return res.status(200).json({ saleUpdated, status: options[nextStatus] });
   }
 
   async canceledStatus(req, res) {
     const { id } = req.params;
-    const SaleExist = await Sales.findByPk(id);
+    const sale = await Sales.findByPk(id);
 
-    if (!SaleExist) {
-      res.status(409).json({ message: "Sale not found!!" });
+    if (!sale) {
+      return res.status(409).json({ message: "Sale not found!!" });
     }
     const saleUpdated = await Sales.update({ status: 'canceled' }, { where: { id } });
-    res.status(200).json({ saleUpdated, status: 'canceled' });
+    return res.status(200).json({ saleUpdated, status: 'canceled' });
   }
   async getTopSellers(_req, res) {
     const sellers = await Sales.findAll({
@@ -146,7 +148,7 @@ class SalesController {
         [Sequelize.fn('SUM', Sequelize.col('quantity')), 'total_sales'],
         'product_id',
       ],
-      group: ['tsauth.product_id', 'product.id', 'product.name', 'product.price'],
+      group: ['product.id', 'product.name'],
       order: [[Sequelize.literal('total_sales'), 'DESC']],
       limit: 5,
       include: [
@@ -210,8 +212,6 @@ class SalesController {
 
     return res.json(topSellers);
   }
-
-
 }
 
 module.exports = new SalesController();
